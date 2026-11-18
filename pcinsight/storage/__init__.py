@@ -1,0 +1,1 @@
+"""SQLite storage layer: connection, schema migration and repositories."""

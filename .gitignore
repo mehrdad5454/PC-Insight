@@ -1,0 +1,59 @@
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+.pytype/
+.mypy_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Build artifacts
+build/
+dist/
+*.spec
+
+# Data & logs
+data/
+logs/
+*.log
+*.sqlite
+*.db
+*.db-journal
+
+# Local user data (never commit)
+%LOCALAPPDATA%\PCInsight/
+$LOCALAPPDATA/PCInsight/
+
+# IDE & editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Packaging (keep spec but not build outputs)
+*.exe
+*.msi
+*.dmg
+*.appimage
+
+# Environment
+.env
+.env.local
+*.env
+
+# Test artifacts
+*.cover
+.coverage.*
