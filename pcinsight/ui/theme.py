@@ -94,6 +94,15 @@ QLabel#CardHint {{
     color: {text_dim};
     font-size: 11px;
 }}
+QLabel#FloatingCardValue {{
+    color: {text};
+    font-size: 18px;
+    font-weight: 600;
+}}
+QLabel#FloatingCardHint {{
+    color: {text_muted};
+    font-size: 10px;
+}}
 QLabel#SectionTitle {{
     color: {text};
     font-size: 15px;

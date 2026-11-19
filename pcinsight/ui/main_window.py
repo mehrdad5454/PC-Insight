@@ -92,14 +92,28 @@ class MainWindow(QMainWindow):
             if sampler_service is None:
                 self._float_button.setChecked(False)
                 return
-            self._floating_panel = widgets.FloatingPanel(sampler_service, self)
+            self._floating_panel = widgets.FloatingPanel(sampler_service, None)
             self._floating_panel.visibility_changed.connect(self._on_floating_visibility_changed)
+            self._floating_panel.exit_requested.connect(self._exit_application)
             # Position near the main window
             self._floating_panel.move(self.x() + self.width() + 20, self.y() + 50)
         if checked:
             self._floating_panel.show_panel()
         else:
             self._floating_panel.hide_panel()
+
+    def _exit_application(self) -> None:
+        """Fully exit the application."""
+        self._closed = True
+        if self._floating_panel is not None:
+            self._floating_panel.close()
+        sampler_service = self.context.sampler_service
+        if sampler_service is not None:
+            sampler_service.stop()
+        self._tasks.cancel_all()
+        self._tasks.wait_for_done(3000)
+        from PySide6.QtWidgets import QApplication
+        QApplication.instance().quit()
 
     def _on_floating_visibility_changed(self, visible: bool) -> None:
         self._float_button.setChecked(visible)
@@ -349,13 +363,11 @@ class MainWindow(QMainWindow):
         return self._tasks
 
     def closeEvent(self, event: QCloseEvent) -> None:
-        """Stop background work and ignore any result that arrives afterwards."""
-        self._closed = True
-        if self._floating_panel is not None:
-            self._floating_panel.close()
-        sampler_service = self.context.sampler_service
-        if sampler_service is not None:
-            sampler_service.stop()
-        self._tasks.cancel_all()
-        self._tasks.wait_for_done(3000)
-        super().closeEvent(event)
+        """Hide the main window instead of closing the application.
+        
+        The application continues running in the background with the floating panel
+        (if visible). Use "Exit Application" from the floating panel menu to fully quit.
+        """
+        # Just hide the window, don't stop services or close floating panel
+        event.ignore()
+        self.hide()

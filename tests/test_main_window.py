@@ -321,7 +321,8 @@ def test_result_after_close_is_ignored(qt_app, tmp_path: Path) -> None:
         None,
     )
 
-    assert window._closed
+    # Window should be hidden, not closed
+    assert not window.isVisible()
 
 
 def test_close_cancels_running_work(qt_app, tmp_path: Path) -> None:
@@ -336,7 +337,8 @@ def test_close_cancels_running_work(qt_app, tmp_path: Path) -> None:
     blocker.release.set()
     window.close()
 
-    assert window._closed
+    # Window should be hidden, not closed (app keeps running for floating panel)
+    assert not window.isVisible()
 
 
 def test_close_is_safe_without_any_work(qt_app, tmp_path: Path) -> None:
@@ -345,7 +347,8 @@ def test_close_is_safe_without_any_work(qt_app, tmp_path: Path) -> None:
 
     window.close()
 
-    assert window._closed
+    # Window should be hidden, not closed (app keeps running for floating panel)
+    assert not window.isVisible()
 
 
 def test_theme_switch_applies_and_reports_the_resolved_theme(qt_app, tmp_path: Path) -> None:

@@ -296,9 +296,11 @@ def test_floating_panel_uses_shared_history(qt_app, tmp_path: Path) -> None:
     qt_app.processEvents()
 
     # Panel should have received and displayed the history
-    for card in panel._charts.values():
-        chart = card._chart
-        assert len(chart._points) == 2
+    # Check that cards have been updated with values (not "—")
+    assert panel._cpu_card._value.text() != "—"
+    assert panel._ram_card._value.text() != "—"
+    assert panel._disk_card._value.text() != "—"
+    assert panel._net_card._value.text() != "—"
 
     panel.close()
 
@@ -340,12 +342,22 @@ def test_shared_sampling_stream_integration(tmp_path: Path) -> None:
     assert window._floating_panel is not None
     assert window._floating_panel._sampler_service is svc
 
-    # Cleanup
+    # Cleanup - close floating panel
     window._toggle_floating_panel(False)
     app.processEvents()
+    
+    # Hide main window - service should still be running for potential floating panel
     window.close()
     app.processEvents()
 
+    # Service should still be running (app not exited)
+    assert svc.running
+    
+    # Actually exit the application
+    window._exit_application()
+    app.processEvents()
+    
+    # Now service should be stopped
     assert not svc.running
 
 
